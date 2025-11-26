@@ -1,0 +1,141 @@
+# general settings
+name: SSGformer
+model_type: ImageCleanModel
+scale: 1
+num_gpu: 1
+manual_seed: 5124
+
+# dataset and data loader settings
+datasets:
+  train:
+    name: TrainSet
+    type: AllweatherPairedImage
+    dataroot_gt: /mnt/ssd2/AdverseWeather/allweather_dataset/train
+    dataroot_lq: /mnt/ssd2/AdverseWeather/allweather_dataset/train
+    geometric_augs: true
+
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+
+    # data loader
+    use_shuffle: true
+    num_worker_per_gpu: 2
+    batch_size_per_gpu: 6
+
+    ### -------------Progressive training--------------------------
+    mini_batch_sizes: [6,4,2,1,1]             # Batch size per gpu   
+    iters: [150000,130000,90000,54000,48000]
+    gt_size: 296   # Max patch size for progressive training
+    gt_sizes: [128,144,216,256,288]  # Patch sizes for progressive training.
+    dataset_enlarge_ratio: 1
+    prefetch_mode: ~
+
+  val_snow_l:
+    name: ValSet_Snow100K-L
+    type: AllWeatherTestPairedImage
+    dataroot_gt: /mnt/ssd2/AdverseWeather/allweather_dataset/val/Snow100K-L/gt/
+    dataroot_lq: /mnt/ssd2/AdverseWeather/allweather_dataset/val/Snow100K-L/input/
+    io_backend:
+      type: disk
+  val_test1:
+    name: ValSet_Test1
+    type: AllWeatherTestPairedImage
+    dataroot_gt: /mnt/ssd2/AdverseWeather/allweather_dataset/val/test1/gt
+    dataroot_lq: /mnt/ssd2/AdverseWeather/allweather_dataset/val/test1/input
+    io_backend:
+      type: disk
+  val_raindrop:
+    name: ValSet_RainDrop
+    type: AllWeatherTestPairedImage
+    dataroot_gt: /mnt/ssd2/AdverseWeather/allweather_dataset/val/rain_drop_test/gt
+    dataroot_lq: /mnt/ssd2/AdverseWeather/allweather_dataset/val/rain_drop_test/input
+    io_backend:
+      type: disk
+
+# network structures
+network_g:
+  type: SSGformer
+  inp_channels: 3
+  out_channels: 3
+  dim: 36
+  num_ca_blocks: [2,2,3,4]
+  num_sa_blocks: [2,2,3,4]
+  num_refinement_blocks: 4
+  heads: [1,2,4,8]
+  num_factors: [4,16,64,256]
+  ffn_expansion_factor: 2.667
+  bias: False
+  LayerNorm_type: WithBias
+  dual_pixel_task: False
+  num_prompt: 8
+  dim_prompt: 16
+
+# path
+path:
+  pretrain_network_g: ~
+  strict_load_g: true
+  resume_state: ~
+
+# training settings
+train:
+  total_iter: 900000
+  warmup_iter: -1 # no warm up
+  use_grad_clip: true
+
+  # Split 900k iterations into two cycles. 
+  # 1st cycle: fixed 3e-4 LR for 150k iters. 
+  # 2nd cycle: cosine annealing (3e-4 to 1e-6) for 750k iters.
+  scheduler:
+    type: CosineAnnealingRestartCyclicLR # ReduceLROnPlateau
+    periods: [150000, 900000]
+    restart_weights: [1,1]
+    eta_mins: [0.0003,0.000001]   
+  
+  mixing_augs:
+    mixup: false
+    mixup_beta: 1.2
+    use_identity: true
+
+  optim_g:
+    type: AdamW
+    lr: !!float 3e-4
+    weight_decay: !!float 1e-4
+    betas: [0.9, 0.999]
+  
+  # losses
+  pixel_opt:
+    type: L1Loss
+    loss_weight: 1
+    reduction: mean
+  seq_opt:
+    type: Pearson
+
+# validation settings
+val:
+  window_size: 8
+  val_freq: !!float 1e3
+  save_img: true
+  rgb2bgr: true
+  use_image: true
+  max_minibatch: 1
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 0
+      test_y_channel: true
+
+# logging settings
+logger:
+  print_freq: 100
+  save_checkpoint_freq: !!float 1e3
+  use_tb_logger: true
+  wandb:
+    project: ~
+    resume_id: ~
+
+# dist training settings
+dist_params:
+  backend: nccl
+  port: 29500
