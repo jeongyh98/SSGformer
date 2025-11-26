@@ -18,3 +18,8 @@ If you use SSGformer, please consider citing:
 
 
 All visual results are in [Google Drive](https://drive.google.com/drive/folders/1T7eKWKSe_IlcIF4iFtm9N-zqz0aQdz2r?usp=sharing). 
+
+
+## :mask: Mask generation
+
+    python ./mask/mask.py --root {path/to/(Raindrop/Rain/Snow)} --save_path {path/to/save/mask}
