@@ -47,3 +47,7 @@ All visual results are in [Google Drive](https://drive.google.com/drive/folders/
             ├── gt/
             ├── input/
             └── mask/
+
+
+## :+1: Acknowledgment
+Our code is based on the [Histoformer](https://github.com/sunshangquan/Histoformer).
