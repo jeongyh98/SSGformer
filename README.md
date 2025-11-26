@@ -17,4 +17,4 @@ If you use SSGformer, please consider citing:
 ## :bell: Visual Results 
 
 
-All visual results are in [Google Drive] (https://drive.google.com/drive/folders/1T7eKWKSe_IlcIF4iFtm9N-zqz0aQdz2r?usp=sharing). 
+All visual results are in [Google Drive](https://drive.google.com/drive/folders/1T7eKWKSe_IlcIF4iFtm9N-zqz0aQdz2r?usp=sharing). 
