@@ -26,7 +26,7 @@ def parse_args():
 def main():
     args = parse_args()
 
-    root = os.path.join(args.root, "**", "*.png") # jpg, jpeg
+    root = os.path.join(args.root, "*")
     imgs = sorted(glob(root, recursive=True))
     save_path = args.save_path
     os.makedirs(save_path, exist_ok=True)
