@@ -49,5 +49,11 @@ All visual results are in [Google Drive](https://drive.google.com/drive/folders/
             └── mask/
 
 
+## :running: Evaluation
+1. Download [checkpoint](https://drive.google.com/file/d/1IHVuBH9JjikCy7a8KuBOAVQvW97swZjJ/view?usp=sharing)
+2. Place the checkpoint into ./experiments/SSGformer/models
+3. Run test.sh
+
+
 ## :+1: Acknowledgment
 Our code is based on the [Histoformer](https://github.com/sunshangquan/Histoformer).
