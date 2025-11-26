@@ -23,3 +23,27 @@ All visual results are in [Google Drive](https://drive.google.com/drive/folders/
 ## :mask: Mask generation
 
     python ./mask/mask.py --root {path/to/(Raindrop/Rain/Snow)} --save_path {path/to/save/mask}
+
+
+
+## :tree: Dataset setting
+
+    allweather_dataset/
+    ├── train/
+    │   └── allweather/
+    │       ├── gt/
+    │       ├── input/
+    │       └── mask/
+    └── test/
+        ├── rain_drop_test/
+        │   ├── gt/
+        │   ├── input/
+        │   └── mask/
+        ├── Snow100K-L/
+        │   ├── gt/
+        │   ├── input/
+        │   └── mask/
+        └── test1/
+            ├── gt/
+            ├── input/
+            └── mask/
