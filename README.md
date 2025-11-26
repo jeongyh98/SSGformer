@@ -54,7 +54,7 @@ All visual results are in [Google Drive](https://drive.google.com/drive/folders/
 2. Place the checkpoint into ./experiments/SSGformer/models
 3. Run test shell file
 ```
-    . ./test.sh
+. ./test.sh
 ```
 
 ## :+1: Acknowledgment
